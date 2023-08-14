@@ -1,5 +1,8 @@
 <h1>URL-Shortner</h1>
 
+{% for message in get_flashed_messages() %} <!-- -->
+<h2>{{ message }}</h2>
+{% endfor %}
 <h2>Hello {{name }}</h2>
 
 <form action="your-url" method="post"> <!-- # This wants to send you to the URL with your-url behind, without `method="post"`, it's a GET-request, this visible in the URL bar of the web browser, also specify this as an argument in the decorator , `methods=["GET", "POST"]` -->

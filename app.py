@@ -5,10 +5,12 @@ from flask import redirect
 from flask import url_for
 import json # install json via pip
 import os.path # needed to read data from a file
+from flask import flash
 
 # This file is `hello.py` but if it was `app.py`, than you don't have to specify `export FLASK_APP=app`.
 
 app = Flask(__name__) # We've just imported `Flask` from line 1. The `__name__`  is the app we currenty run (thus `hello.py`).
+app.secret_key = '&%%@&^$)()%*%' # needed to send securely send data from flash messages to the user.
 
 # print(__name__) # This is the `hello` name, which is determined by the `hello.py` file.
 
@@ -31,7 +33,8 @@ def your_url(): # Python functions, don't allow dashes, so we use `_`.
     if os.path.exists('urls.json'): # if the file exists
       with open('urls.json') as urls_file:
         urls = json.load(urls_file) # put all the data from the file in the dictionary called `urls`
-    if request.form['code'] in urls.keys(): # if the code already exist in the key values:
+    if request.form['code'] in urls.keys(): # if the code (short name) already exist in the key values:
+      flash('That short name has already been taken. Please select another name.')
       return redirect(url_for('home')) 
 
     urls[request.form['code']] = {'url':request.form['url']} # if the form name is not correct than you can get the error in the browser: `Bad Request The browser (or proxy) sent a request that this server could not understand.`
