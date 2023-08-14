@@ -6,6 +6,7 @@ from flask import url_for
 import json # install json via pip
 import os.path # needed to read data from a file
 from flask import flash
+from werkzeug.utils import secure_filename # check if uploaded files are okay to upload
 
 # This file is `hello.py` but if it was `app.py`, than you don't have to specify `export FLASK_APP=app`.
 
@@ -35,9 +36,17 @@ def your_url(): # Python functions, don't allow dashes, so we use `_`.
         urls = json.load(urls_file) # put all the data from the file in the dictionary called `urls`
     if request.form['code'] in urls.keys(): # if the code (short name) already exist in the key values:
       flash('That short name has already been taken. Please select another name.')
-      return redirect(url_for('home')) 
+      return redirect(url_for('home'))
 
-    urls[request.form['code']] = {'url':request.form['url']} # if the form name is not correct than you can get the error in the browser: `Bad Request The browser (or proxy) sent a request that this server could not understand.`
+    if 'url' in request.form.keys():
+       urls[request.form['code']] = {'url':request.form['url']}
+    else: # if no URL is given, than it is a file!
+      f = request.files['file']
+      full_name = request.form['code'] + secure_filename(f.filename) # Name of the file will also have the short URL!
+      f.save('/mnt/c/Users/Dion Dresschers/data/gitg/url-shortner/' + full_name)
+      urls[request.form['code']] = {'file':full_name}
+
+
     with open('urls.json','w') as url_file: # create a file named `url_file`
       json.dump(urls, url_file) # `urls` is the dictionary, the secons id the file # import `json` for this.
     return render_template("your-url.html", code=request.form['code']) # use `request.form` with 'POST' and `request.args` with GET. The latter is to access the GET-request for the field `code` that we put into an HTML form.
