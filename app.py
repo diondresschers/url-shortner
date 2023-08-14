@@ -8,6 +8,7 @@ import os.path # needed to read data from a file
 from flask import flash
 from werkzeug.utils import secure_filename # check if uploaded files are okay to upload
 from flask import abort
+from flask import session # With this you can use cookies.
 
 # This file is `hello.py` but if it was `app.py`, than you don't have to specify `export FLASK_APP=app`.
 
@@ -18,8 +19,7 @@ app.secret_key = '&%%@&^$)()%*%' # needed to send securely send data from flash 
 
 @app.route("/")
 def home(): 
-  return render_template('home.html', name="Dion") # This is the template file `home.html`, that Flask automatically will find because it is in the `templates` directory.
-#    return "Hello World..."
+  return render_template('home.html', codes=session.keys()) # This is the template file `home.html`, that Flask automatically will find because it is in the `templates` directory. # With `codes=session.keys()`, we are also using the data in the cookies.
 
 #app.run(host="0.0.0.0", port=50000, debug=True) # Necessary to access WSL2 flask via Windows, in WSL pipenv run with 'python3 hello.py'
 
@@ -47,7 +47,8 @@ def your_url(): # Python functions, don't allow dashes, so we use `_`.
       f.save('/mnt/c/Users/Dion Dresschers/data/gitg/url-shortner/static/user_files/' + full_name)
       urls[request.form['code']] = {'file':full_name}
     with open('urls.json','w') as url_file: # create a file named `url_file`
-      json.dump(urls, url_file) # `urls` is the dictionary, the secons id the file # import `json` for this.
+      json.dump(urls, url_file) # `urls` is the dictionary, the secons id the file # import `json` for this. Save the file.
+      session[request.form['code']] = True # Save this as a cookie. We don't save this as a value, so we just use `True`. # In stead of `True, you could also use a timestampt, so the user knew when it was saved.`
     return render_template("your-url.html", code=request.form['code']) # use `request.form` with 'POST' and `request.args` with GET. The latter is to access the GET-request for the field `code` that we put into an HTML form.
   else: # if it is a 'GET'
     return redirect(url_for('home')) # the `home` is redirecting to the function `home` # return redirect(url) #return render_template('home.html') # With a redirect you are are not viewing the `/your-url` in the address bar of the web browser.
