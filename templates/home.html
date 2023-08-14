@@ -1,1 +1,17 @@
-<h1>This is the homepage!</h1>
+<h1>URL-Shortner</h1>
+
+<h2>Hello {{name }}</h2>
+
+<form action="your-url"> # This wants to send you to the URL with your-url behind
+    <p>
+    <label for="url">Website URL</label>
+    <input type="url" name="url" value="" required>
+    </p>
+    <p>
+    <label for="code">Short name</label>
+    <input type="text" name="code" value="" required>
+    </p>
+    <p>
+    <input type="submit" value="Shorten">
+    </p>
+</form>
