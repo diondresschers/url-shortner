@@ -23,9 +23,15 @@ def home():
 def about(): # The route and the function name don't have to match.
   return "This is a url shortner"
 
-@app.route("/your-url")
+@app.route("/your-url", methods=['POST'])
 def your_url(): # Python functions, don't allow dashes, so we use `_`.
-  return render_template("your-url.html", code=request.args['code']) # The latter is to access the GET-request for the field `code` that we put into an HTML form.
+  if request.method == "POST":
+    return render_template("your-url.html", code=request.form['code']) # use `request.form` with 'POST' and `request.args` with GET. The latter is to access the GET-request for the field `code` that we put into an HTML form.
+  else: # if it is a 'GET'
+    return 'This is not valid.'
+
+#if __name__ == "__main__":
+#    app.run(debug=True)
 
 
 
