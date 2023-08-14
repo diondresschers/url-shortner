@@ -43,16 +43,25 @@ def your_url(): # Python functions, don't allow dashes, so we use `_`.
     else: # if no URL is given, than it is a file!
       f = request.files['file']
       full_name = request.form['code'] + secure_filename(f.filename) # Name of the file will also have the short URL!
-      f.save('/mnt/c/Users/Dion Dresschers/data/gitg/url-shortner/' + full_name)
+      f.save('/mnt/c/Users/Dion Dresschers/data/gitg/url-shortner/uploaded_files/' + full_name)
       urls[request.form['code']] = {'file':full_name}
-
-
     with open('urls.json','w') as url_file: # create a file named `url_file`
       json.dump(urls, url_file) # `urls` is the dictionary, the secons id the file # import `json` for this.
     return render_template("your-url.html", code=request.form['code']) # use `request.form` with 'POST' and `request.args` with GET. The latter is to access the GET-request for the field `code` that we put into an HTML form.
   else: # if it is a 'GET'
     return redirect(url_for('home')) # the `home` is redirecting to the function `home` # return redirect(url) #return render_template('home.html') # With a redirect you are are not viewing the `/your-url` in the address bar of the web browser.
 
+
+                
+@app.route('/<string:code>') # This `'<string:code>`, means look for any `string` and put it in a variable called 'code'.
+def redirect_to_url(code):
+  if os.path.exists('urls.json'):
+    with open('urls.json') as urls_file:
+      urls = json.load(urls_file)
+      if code in urls.keys(): # if the short url is stored:
+        if 'url' in urls[code].keys(): # check if it is in the 'url' rather than a 'file'
+          return redirect(urls[code]['url'])
+   
 
 
 
