@@ -7,6 +7,7 @@ import json # install json via pip
 import os.path # needed to read data from a file
 from flask import flash
 from werkzeug.utils import secure_filename # check if uploaded files are okay to upload
+from flask import abort
 
 # This file is `hello.py` but if it was `app.py`, than you don't have to specify `export FLASK_APP=app`.
 
@@ -61,7 +62,14 @@ def redirect_to_url(code):
           return redirect(urls[code]['url'])
         else: # If the short code is redirecting to a file rather than a URL.
           return redirect(url_for('static', filename="user_files/" + urls[code]['file']))
-   
+  return abort(404) # send a 404 message ('Not Found')
+
+@app.errorhandler(404) # handle 404 codes nicely.
+def page_not_found(error):
+  return render_template('page_not_found.html'), 404 # The `404` only tells the web browser there was a 404.
+
+
+
 
 
 
