@@ -9,6 +9,7 @@ from flask import flash
 from werkzeug.utils import secure_filename # check if uploaded files are okay to upload
 from flask import abort
 from flask import session # With this you can use cookies.
+from flask import jsonify # Takes any sort of list or dictionary and cheanges it into JSON format.
 
 # This file is `hello.py` but if it was `app.py`, than you don't have to specify `export FLASK_APP=app`.
 
@@ -69,6 +70,9 @@ def redirect_to_url(code):
 def page_not_found(error):
   return render_template('page_not_found.html'), 404 # The `404` only tells the web browser there was a 404.
 
+@app.route('/api')
+def session_api():
+  return jsonify(list(session.keys())) # This takes all of the info of the cookie, put that one into a list, and than make it into JSON format.
 
 
 
