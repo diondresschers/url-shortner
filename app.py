@@ -4,6 +4,7 @@ from flask import request # This is for the GET-requests
 from flask import redirect
 from flask import url_for
 import json # install json via pip
+import os.path # needed to read data from a file
 
 # This file is `hello.py` but if it was `app.py`, than you don't have to specify `export FLASK_APP=app`.
 
@@ -26,6 +27,13 @@ def about(): # The route and the function name don't have to match.
 def your_url(): # Python functions, don't allow dashes, so we use `_`.
   if request.method == "POST":
     urls = {} # We are going to use a dictionary so we can us a json file to save our data.
+
+    if os.path.exists('urls.json'): # if the file exists
+      with open('urls.json') as urls_file:
+        urls = json.load(urls_file) # put all the data from the file in the dictionary called `urls`
+    if request.form['code'] in urls.keys(): # if the code already exist in the key values:
+      return redirect(url_for('home')) 
+
     urls[request.form['code']] = {'url':request.form['url']} # if the form name is not correct than you can get the error in the browser: `Bad Request The browser (or proxy) sent a request that this server could not understand.`
     with open('urls.json','w') as url_file: # create a file named `url_file`
       json.dump(urls, url_file) # `urls` is the dictionary, the secons id the file # import `json` for this.
