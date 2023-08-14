@@ -1,5 +1,11 @@
-<h1>Page Not Found</h1>
+{% extends 'base.html' %}
+
+{% block title %}URL-shortner ERROR: Page not found{% endblock title%}
+
+{% block main %}
+<h1>URL-Shortner</h1>
 
 <p>We counldn't find what you are looking for, Come visit our homepage.</p>
 
 <p><a href="{{ url_for('home')}}">Home</a></p> <!-- the url_for is just if the path for the page might change, so it is more dyniamic -->
+{% endblock main %}
