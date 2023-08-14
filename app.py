@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import render_template # now it can use templates
 from flask import request # This is for the GET-requests
+from flask import redirect
+from flask import url_for
 
 # This file is `hello.py` but if it was `app.py`, than you don't have to specify `export FLASK_APP=app`.
 
@@ -23,15 +25,12 @@ def home():
 def about(): # The route and the function name don't have to match.
   return "This is a url shortner"
 
-@app.route("/your-url", methods=['POST'])
+@app.route("/your-url", methods=['POST', 'GET'])
 def your_url(): # Python functions, don't allow dashes, so we use `_`.
   if request.method == "POST":
     return render_template("your-url.html", code=request.form['code']) # use `request.form` with 'POST' and `request.args` with GET. The latter is to access the GET-request for the field `code` that we put into an HTML form.
   else: # if it is a 'GET'
-    return 'This is not valid.'
-
-#if __name__ == "__main__":
-#    app.run(debug=True)
+    return redirect(url_for('home')) # the `home` is redirecting to the function `home` # return redirect(url) #return render_template('home.html') # With a redirect you are are not viewing the `/your-url` in the address bar of the web browser.
 
 
 
